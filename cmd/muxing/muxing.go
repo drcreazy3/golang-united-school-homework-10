@@ -56,12 +56,13 @@ func paramHandler(w http.ResponseWriter, r *http.Request) {
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	body, _ := ioutil.ReadAll(r.Body)
-	fmt.Fprintf(w, "I got message:\n%s!", body)
+	fmt.Fprintf(w, "I got message:\n%s", body)
 }
 
 func postHeaderHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
 	a, _ := strconv.Atoi(r.Header.Get("a"))
 	b, _ := strconv.Atoi(r.Header.Get("b"))
-	w.Header().Add("a+b", fmt.Sprintf("%d", a+b))
+
+	w.Header().Set("a+b", fmt.Sprint(a+b))
+	w.WriteHeader(http.StatusOK)
 }
