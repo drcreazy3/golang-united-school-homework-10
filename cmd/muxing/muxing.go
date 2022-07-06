@@ -21,6 +21,11 @@ main function reads host/port from env just for an example, flavor it following 
 func Start(host string, port int) {
 	router := mux.NewRouter()
 
+	router.HandleFunc("/bad", badHandler).Methods("GET")
+	router.HandleFunc("/name/{param}", paramHandler).Methods("GET")
+	router.HandleFunc("/data", postHandler).Methods("POST")
+	router.HandleFunc("/headers", postHeaderHandler).Methods("POST")
+
 	log.Println(fmt.Printf("Starting API server on %s:%d\n", host, port))
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), router); err != nil {
 		log.Fatal(err)
@@ -35,4 +40,26 @@ func main() {
 		port = 8081
 	}
 	Start(host, port)
+}
+
+func badHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusInternalServerError)
+}
+
+func paramHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "Hello, %v!", vars["param"])
+}
+
+func postHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, "I got message:\n %s!", r.Body)
+}
+
+func postHeaderHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	a, _ := strconv.Atoi(r.Header.Get("a"))
+	b, _ := strconv.Atoi(r.Header.Get("b"))
+	w.Header().Add("a+b", string(a+b))
 }
