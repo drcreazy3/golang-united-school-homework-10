@@ -61,5 +61,5 @@ func postHeaderHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	a, _ := strconv.Atoi(r.Header.Get("a"))
 	b, _ := strconv.Atoi(r.Header.Get("b"))
-	w.Header().Add("a+b", string(a+b))
+	w.Header().Add("a+b", fmt.Sprintf("%d", a+b))
 }
