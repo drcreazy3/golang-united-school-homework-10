@@ -25,6 +25,7 @@ func Start(host string, port int) {
 	router.HandleFunc("/name/{param}", paramHandler).Methods("GET")
 	router.HandleFunc("/data", postHandler).Methods("POST")
 	router.HandleFunc("/headers", postHeaderHandler).Methods("POST")
+	router.HandleFunc("/header", postHeaderHandler).Methods("POST")
 
 	log.Println(fmt.Printf("Starting API server on %s:%d\n", host, port))
 	if err := http.ListenAndServe(fmt.Sprintf("%s:%d", host, port), router); err != nil {
@@ -54,7 +55,7 @@ func paramHandler(w http.ResponseWriter, r *http.Request) {
 
 func postHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "I got message:\n %s!", r.Body)
+	fmt.Fprintf(w, "I got message:\n%s!", r.Body)
 }
 
 func postHeaderHandler(w http.ResponseWriter, r *http.Request) {
